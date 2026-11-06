@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>จัดแผนฟุตบอล 7-8 คน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f0e8;--ink:#14231a;--mute:#5c6b60;--card:#fff;--line:#d8d5c7;--kit:#d1352b;--gk:#f2c230;--sel:#1b6dd1;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a14;--ink:#eef0e6;--mute:#9db0a2;--card:#1a2a21;--line:#2d4236}}
+:root[data-theme="dark"]{--bg:#101a14;--ink:#eef0e6;--mute:#9db0a2;--card:#1a2a21;--line:#2d4236}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Kanit','Noto Sans Thai',system-ui,sans-serif;line-height:1.5}
+main{max-width:1180px;margin:0 auto;padding:16px 18px 40px}
+header{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between;margin-bottom:12px}
+h1{font-size:1.5rem;font-weight:600;margin:0}
+.sub{color:var(--mute);margin:0;font-size:.9rem}
+.seg{display:flex;border:1.5px solid var(--ink);border-radius:10px;overflow:hidden}
+.seg button{font:inherit;font-size:1rem;border:0;background:var(--card);color:var(--ink);padding:8px 22px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;padding:7px 16px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,input:focus-visible,.tok:focus-visible{outline:3px solid var(--sel);outline-offset:2px}
+.layout{display:grid;grid-template-columns:1fr;gap:18px}
+.stage{display:flex;justify-content:center}
+#pitch{position:relative;width:min(100%,calc((100vh - 190px)*.73));min-width:300px;aspect-ratio:3/4.1;border-radius:10px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;container-type:inline-size;
+background:repeating-linear-gradient(0deg,#2c7d45 0 12.5%,#287641 12.5% 25%);border:3px solid #1c5a31}
+#pitch svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.tok{position:absolute;width:76px;transform:translate(-50%,-50%);text-align:center;cursor:grab;touch-action:none}
+.tok .dot{width:46px;height:46px;margin:0 auto;border-radius:50%;background:var(--kit);color:#fff;font-weight:600;font-size:1.1rem;display:grid;place-items:center;border:3px solid #f3f1e7;box-shadow:0 2px 5px rgba(0,0,0,.35)}
+.tok.gk .dot{background:var(--gk);color:#3a2d00}
+.tok .nm{font-size:.8rem;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;min-height:1.2em}
+@supports (width:1cqw){
+.tok{width:15cqw}
+.tok .dot{width:clamp(40px,9.5cqw,72px);height:clamp(40px,9.5cqw,72px);font-size:clamp(1rem,3.4cqw,1.6rem)}
+.tok .nm{font-size:clamp(.75rem,2.5cqw,1.1rem)}
+}
+.hint{color:var(--mute);font-size:.85rem;margin:0 0 10px}
+h2{font-size:1.1rem;font-weight:500;margin:16px 0 8px}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.row input{font:inherit;font-size:1rem;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;min-width:0}
+.row .n{width:64px;text-align:center}
+.row .t{flex:1}
+.row .role{width:64px;color:var(--mute);font-size:.88rem;flex:none}
+.subbtn{flex:none;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;border-radius:8px;padding:9px 12px;cursor:pointer;font-size:.88rem}
+.subbtn[aria-pressed="true"]{background:var(--sel);border-color:var(--sel);color:#fff}
+.reset{margin-top:14px;border:1.5px solid var(--line);background:none;color:var(--ink);font:inherit;padding:9px 18px;border-radius:8px;cursor:pointer}
+@media (min-width:900px) and (orientation:landscape){
+.layout{grid-template-columns:auto minmax(320px,1fr);align-items:start}
+.panel{max-height:calc(100vh - 150px);overflow-y:auto;padding-right:4px}
+}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div><h1>จัดแผนฟุตบอล</h1><p class="sub">ลากผู้เล่นไปยังตำแหน่งที่ต้องการ</p></div>
+<div class="seg" role="group" aria-label="จำนวนผู้เล่นต่อทีม"><button type="button" id="m7">7 คน</button><button type="button" id="m8">8 คน</button></div>
+</header>
+<div class="chips" id="chips" role="group" aria-label="รูปแบบทีม"></div>
+<div class="layout">
+<div class="stage"><div id="pitch">
+<svg viewBox="0 0 300 410" preserveAspectRatio="none" fill="none" stroke="#f3f1e7" stroke-opacity=".8" stroke-width="2">
+<rect x="10" y="10" width="280" height="390"/><line x1="10" y1="205" x2="290" y2="205"/>
+<circle cx="150" cy="205" r="36"/><rect x="85" y="10" width="130" height="52"/><rect x="85" y="348" width="130" height="52"/>
+<rect x="120" y="4" width="60" height="6"/><rect x="120" y="400" width="60" height="6"/>
+</svg></div></div>
+<div class="panel">
+<p class="hint" id="hint">แตะ "ส่งลงสนาม" ที่ตัวสำรอง แล้วแตะผู้เล่นในสนามเพื่อสลับตัว</p>
+<h2>ผู้เล่นตัวจริง</h2>
+<div id="starters"></div>
+<h2>ตัวสำรอง</h2>
+<div id="subs"></div>
+<button class="reset" id="reset" type="button">รีเซ็ตทั้งหมด</button>
+</div>
+</div>
+</main>
+<script>
+(function(){
+var F={7:{
+"2-3-1":[[30,72],[70,72],[20,48],[50,48],[80,48],[50,24]],
+"3-2-1":[[20,72],[50,72],[80,72],[33,48],[67,48],[50,24]],
+"2-2-2":[[30,72],[70,72],[30,48],[70,48],[30,24],[70,24]],
+"3-1-2":[[20,72],[50,72],[80,72],[50,48],[30,24],[70,24]],
+"1-3-2":[[50,72],[20,48],[50,48],[80,48],[33,24],[67,24]]},
+8:{
+"3-3-1":[[20,72],[50,72],[80,72],[20,48],[50,48],[80,48],[50,24]],
+"2-3-2":[[30,72],[70,72],[20,48],[50,48],[80,48],[33,24],[67,24]],
+"3-2-2":[[20,72],[50,72],[80,72],[33,48],[67,48],[33,24],[67,24]],
+"2-4-1":[[30,72],[70,72],[14,48],[38,48],[62,48],[86,48],[50,24]]}};
+var DEF={7:"2-3-1",8:"3-3-1"};
+var KEY="football7.v1",S;
+function applyF(){
+var f=F[S.mode][S.f];if(!f)return;
+for(var i=0;i<f.length;i++){S.p[i+1].x=f[i][0];S.p[i+1].y=f[i][1];}
+}
+function fresh(m){
+m=m||7;S={mode:m,f:DEF[m],p:[{n:"1",name:"",x:50,y:90}],s:[]};
+var i;
+for(i=0;i<m-1;i++)S.p.push({n:String(i+2),name:"",x:50,y:50});
+for(i=0;i<3;i++)S.s.push({n:String(m+i+1),name:""});
+applyF();return S;
+}
+function load(){
+try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);
+if(!o.mode)o.mode=7;
+if(o&&o.p&&o.s&&o.p.length===o.mode&&(o.mode===7||o.mode===8))return o;}}catch(e){}
+return fresh(7);
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+S=load();
+var pitch=document.getElementById("pitch"),chips=document.getElementById("chips"),
+st=document.getElementById("starters"),sb=document.getElementById("subs"),hint=document.getElementById("hint");
+var pick=-1,toks=[];
+function drawMode(){
+[7,8].forEach(function(m){document.getElementById("m"+m).setAttribute("aria-pressed",String(S.mode===m));});
+}
+function setMode(m){
+if(m===S.mode)return;
+if(m===8){var q=S.s.length?S.s.shift():{n:String(S.p.length+S.s.length+1),name:""};S.p.push({n:q.n,name:q.name,x:50,y:50});}
+else{var q2=S.p.pop();S.s.unshift({n:q2.n,name:q2.name});}
+S.mode=m;S.f=DEF[m];pick=-1;applyF();save();
+drawMode();drawChips();buildTokens();drawLists();
+hint.textContent="เปลี่ยนเป็นทีม "+m+" คนแล้ว";
+}
+document.getElementById("m7").onclick=function(){setMode(7);};
+document.getElementById("m8").onclick=function(){setMode(8);};
+function drawChips(){
+chips.innerHTML="";
+var keys=Object.keys(F[S.mode]);if(S.f==="custom")keys.push("custom");
+keys.forEach(function(k){
+var b=document.createElement("button");b.type="button";b.className="chip";
+b.textContent=k==="custom"?"กำหนดเอง":k;b.setAttribute("aria-pressed",String(S.f===k));
+b.onclick=function(){if(k==="custom")return;S.f=k;applyF();save();drawChips();placeTokens();};
+chips.appendChild(b);
+});
+}
+function buildTokens(){
+toks.forEach(function(t){t.remove();});toks=[];
+S.p.forEach(function(p,i){
+var t=document.createElement("div");t.className="tok"+(i===0?" gk":"");
+t.innerHTML='<div class="dot"></div><div class="nm"></div>';
+t.setAttribute("role","button");t.setAttribute("tabindex","0");
+pitch.appendChild(t);toks.push(t);
+var sx,sy,moved=false,drag=false;
+t.addEventListener("pointerdown",function(e){drag=true;moved=false;sx=e.clientX;sy=e.clientY;t.setPointerCapture(e.pointerId);});
+t.addEventListener("pointermove",function(e){
+if(!drag)return;
+if(!moved&&Math.abs(e.clientX-sx)+Math.abs(e.clientY-sy)<6)return;
+moved=true;
+var r=pitch.getBoundingClientRect();
+S.p[i].x=Math.max(7,Math.min(93,(e.clientX-r.left)/r.width*100));
+S.p[i].y=Math.max(6,Math.min(94,(e.clientY-r.top)/r.height*100));
+t.style.left=S.p[i].x+"%";t.style.top=S.p[i].y+"%";
+});
+t.addEventListener("pointerup",function(){
+drag=false;
+if(moved){if(i>0&&S.f!=="custom"){S.f="custom";drawChips();}save();}
+else tapPlayer(i);
+});
+t.addEventListener("pointercancel",function(){drag=false;});
+t.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();tapPlayer(i);}});
+});
+placeTokens();
+}
+function placeTokens(){
+S.p.forEach(function(p,i){
+var t=toks[i];t.style.left=p.x+"%";t.style.top=p.y+"%";
+t.firstChild.textContent=p.n||"-";t.lastChild.textContent=p.name;
+t.setAttribute("aria-label","ผู้เล่นเบอร์ "+(p.n||"-")+" "+p.name);
+});
+}
+function tapPlayer(i){
+if(pick<0)return;
+var a=S.p[i],b=S.s[pick],n=a.n,nm=a.name;
+a.n=b.n;a.name=b.name;b.n=n;b.name=nm;
+pick=-1;save();drawLists();placeTokens();
+hint.textContent="สลับตัวแล้ว";
+}
+function mkRow(o,label,isSub,idx){
+var r=document.createElement("div");r.className="row";
+var l=document.createElement("span");l.className="role";l.textContent=label;r.appendChild(l);
+var n=document.createElement("input");n.className="n";n.inputMode="numeric";n.maxLength=3;n.value=o.n;n.setAttribute("aria-label","เบอร์เสื้อ");
+var t=document.createElement("input");t.className="t";t.placeholder="ชื่อผู้เล่น";t.value=o.name;t.setAttribute("aria-label","ชื่อผู้เล่น");
+n.oninput=function(){o.n=n.value;save();placeTokens();};
+t.oninput=function(){o.name=t.value;save();placeTokens();};
+r.appendChild(n);r.appendChild(t);
+if(isSub){
+var b=document.createElement("button");b.type="button";b.className="subbtn";b.textContent="ส่งลงสนาม";
+b.setAttribute("aria-pressed",String(pick===idx));
+b.onclick=function(){pick=pick===idx?-1:idx;hint.textContent=pick<0?"ยกเลิกการเลือกแล้ว":"แตะผู้เล่นในสนามที่จะเปลี่ยนออก";drawLists();};
+r.appendChild(b);
+}
+return r;
+}
+function drawLists(){
+st.innerHTML="";sb.innerHTML="";
+S.p.forEach(function(p,i){st.appendChild(mkRow(p,i===0?"GK":"ตัวที่ "+(i+1),false,i));});
+S.s.forEach(function(p,i){sb.appendChild(mkRow(p,"สำรอง",true,i));});
+}
+document.getElementById("reset").onclick=function(){var m=S.mode;fresh(m);pick=-1;save();drawChips();buildTokens();drawLists();hint.textContent="รีเซ็ตแล้ว";};
+drawMode();drawChips();buildTokens();drawLists();
+})();
+</script>
+</body>
+</html>
